@@ -1,0 +1,72 @@
+package greedy;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+
+public class sugar {
+
+	public static void main(String[] args) {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			int inputData = Integer.parseInt(br.readLine());
+			int temp = inputData;
+			int[] count = new int[3];
+
+			int cc = 1;
+			while(temp>=8){ //3과5를 더합 값보다는 커야함
+				temp = inputData;//리셋
+				if(temp<3*cc){
+					break;
+				}
+
+				temp -=3*cc;
+				if(temp%5 == 0){
+					count[0] = cc+temp/5;
+					break;
+				}
+				cc++;
+			}
+			
+			temp = inputData;//리셋
+			//3만
+			if(temp%3 ==0){
+				count[1] = temp/3;
+			}
+			
+			temp = inputData;//리셋
+			//5만
+			if(temp%5 ==0){
+				count[2] = temp/5;
+			}
+
+			Arrays.sort(count);
+			int result = -1;
+			for(int c : count){
+				if(c>0){
+					result = c;
+					break;
+				}
+			}
+			System.out.println(result);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			if(br!=null)
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+	}
+
+}
