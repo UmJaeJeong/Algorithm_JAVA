@@ -2,62 +2,86 @@ package 문자열;
 
 import java.util.*;
 
-//https://www.acmicpc.net/problem/5430
 public class AC {
 
+	public static Scanner in = new Scanner(System.in);
+	public static StringBuilder sb = new StringBuilder();
+
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
 
-		int T = sc.nextInt();
-		sc.nextLine();
+		ArrayDeque<Integer> deque;
+		StringTokenizer st;
 
-		for (int i = 0; i < T; i++) {
-			String cmd = sc.nextLine();
-			int cnt = sc.nextInt();
-			sc.nextLine();
-			String values = sc.nextLine();
+		int T = in.nextInt();
 
-			values = values.replace('[', ' ').replace(']', ' ').trim();
-			String[] arrValue = values.split(",");
-			try {
+		while (T-- > 0) {
 
-				for (int j = 0; j < cmd.length(); j++) {
-					if (cmd.charAt(j) == 'R') {
-						arrValue = reverse(arrValue);
-					} else {
-						arrValue = delete(arrValue);
-					}
+			String command = in.next();
+			int n = in.nextInt();
+
+			st = new StringTokenizer(in.next(), "[],");
+
+			deque = new ArrayDeque<Integer>();
+
+			for (int i = 0; i < n; i++) {
+				deque.add(Integer.parseInt(st.nextToken()));
+			}
+
+			AC(command, deque);
+		}
+
+		System.out.println(sb);
+
+	}
+
+	public static void AC(String command, ArrayDeque<Integer> deque) {
+
+		boolean isRight = true;
+		for (char cmd : command.toCharArray()) {
+
+			if (cmd == 'R') {
+				isRight = !isRight;
+				continue;
+			}
+
+			if (isRight) {
+
+				if (deque.pollFirst() == null) {
+					sb.append("error\n");
+					return;
 				}
-				System.out.println(Arrays.toString(arrValue));
-			} catch (Exception e) {
-				System.out.println("error");
+
+			} else {
+				if (deque.pollLast() == null) {
+					sb.append("error\n");
+					return;
+				}
 			}
 		}
+
+		makePrintString(deque, isRight);
+
 	}
 
-	public static int countD(String cmd) {
-		int cnt = 0;
-		for (int i = 0; i < cmd.length(); i++) {
-			if (cmd.charAt(i) == 'D')
-				cnt++;
+	public static void makePrintString(ArrayDeque<Integer> deque, boolean isRight) {
+
+		sb.append('[');
+
+		if (deque.size() > 0) {
+			if (isRight) {
+
+				sb.append(deque.pollFirst());
+				while (!deque.isEmpty()) {
+					sb.append(',').append(deque.pollFirst());
+				}
+			} else {
+				sb.append(deque.pollLast());
+				while (!deque.isEmpty()) {
+					sb.append(',').append(deque.pollLast());
+				}
+			}
 		}
-		return cnt;
-	}
 
-	public static String[] reverse(String[] valuse) {
-		String[] temp = new String[valuse.length];
-		for (int i = 0; i < valuse.length; i++) {
-			temp[i] = valuse[valuse.length - 1 - i];
-		}
-		return temp;
+		sb.append(']').append('\n'); // 닫는 대괄호 및 개행으로 마무리
 	}
-
-	public static String[] delete(String[] valuse) {
-		String[] temp = new String[valuse.length - 1];
-		for (int i = 1; i < valuse.length; i++) {
-			temp[i - 1] = valuse[i];
-		}
-		return temp;
-	}
-
 }
